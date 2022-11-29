@@ -92,9 +92,9 @@ pair<double* , double* > qr_reflect(const double* A, const int n) {
 
 
 int main(int argc, char ** argv){
-        ios_base::sync_with_stdio(false);
-        cin.tie(NULL);
-        cout.tie(NULL);
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
 
     int n = 1000;
     if (argc > 1) {
@@ -106,7 +106,6 @@ int main(int argc, char ** argv){
 
     for(int i = 0; i < n; ++i){
         for(int j = 0; j < n; ++j){
-            //A[i * n + j] = rand() / (RAND_MAX + 1.0);//i*j + j*j + 17*i*sqrt(i) + sin(j) + 1;
             A[i*n + j] = i + j;
         }
     }
