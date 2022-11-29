@@ -31,36 +31,6 @@ PROGRAM main
     call cpu_time(end)
     write (*,*) "Time in seconds: "
     print *, end - start
-
-    ! do i = 1, n
-    !     do j = 1, n
-    !         do l = 1, n
-    !             C((i - 1)*n + j) = C((i - 1)*n + j) + Q((i - 1)*n + l)*R((l - 1)*n + j);
-    !         end do
-    !     end do
-    ! end do
-
-
-    ! do i = 1, n
-    !     do j = 1, n
-    !         if (abs(C((i - 1)*n + j) - A((i - 1)*n + j)) > 0.001) print *, "FAIL!!!!!"
-    !     end do
-    ! end do
-
-
-        ! do j = 1, n
-    !     do i = 1, n
-    !         do l = 1, n
-    !             C((j - 1)*n + i) = C((j - 1)*n + i) + Q((l - 1)*n + i)*R((j - 1)*n + l);
-    !         end do
-    !     end do
-    ! end do
-
-    ! do j = 1, n
-    !     do i = 1, n
-    !         if (abs(C((j - 1)*n + i) - A((j - 1)*n + i)) > 0.001) print *, "FAIL!!!!!"
-    !     end do
-    ! end do
                             
     deallocate (A, R, Q)
 
