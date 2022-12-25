@@ -122,7 +122,9 @@ int main(int argc, char ** argv){
 
     cout << "Time in seconds:" << chrono::duration_cast<chrono::seconds>(end - start).count() << " sec" << "\n";
 
-    delete[] A, R, Q;
+    delete[] A;
+    delete[] R;
+    delete[] Q;
 
     return 0;
 }
