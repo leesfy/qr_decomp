@@ -70,14 +70,10 @@ subroutine houshh_alt(x, n, h)
     h = 0
     h(1) = alpha
 
-    do i = 1, n
-        h(i) = x(i) - h(i)
-    end do
+    h = h - x
     
     call norm(h, n, u_n)
-    do i = 1, n
-        h(i) = h(i) / u_n
-    end do
+    h = h / u_n
 
 end subroutine houshh_alt
 
