@@ -2,7 +2,7 @@ PROGRAM main
     implicit none
  
     double precision, dimension (:, :), allocatable :: A, R, Q
-    integer :: n, i, j, l
+    integer :: n, i, j
     real ::  start, end
     character(len=32) :: arg
 
@@ -18,7 +18,6 @@ PROGRAM main
             A(i, j) = i + j
         end do
     end do
-
 
     call cpu_time(start)
 
@@ -60,17 +59,13 @@ subroutine houshh_alt(x, n, h)
     integer, intent(in) :: n
     double precision, intent(in), dimension(n) :: x
     double precision, intent(out), dimension(n) :: h
-    integer :: i
     double precision :: alpha
     double precision :: u_n
 
-
     call norm(x, n, alpha)
 
-    h = 0
-    h(1) = alpha
-
-    h = h - x
+    h = x
+    h(1) = h(1) - alpha
     
     call norm(h, n, u_n)
     h = h / u_n
@@ -90,15 +85,15 @@ subroutine hhMulRight(u, k, n, Q, tmp)
     
     tmp = 0
 
-    do i = 1, n
-        do j = k, n
-            tmp(i) = tmp(i) + Q(j, i) * u(j - k + 1) 
+    do j = k, n
+        do i = 1, n
+            tmp(i) = tmp(i) + Q(i, j) * u(j - k + 1) 
         end do
     end do
     
-    do i = 1, n
-        do j = k, n
-            Q(j, i) = Q(j, i) - 2*tmp(i) * u(j - k + 1) 
+    do j = k, n
+        do i = 1, n
+            Q(i, j) = Q(i, j) - 2*tmp(i) * u(j - k + 1) 
         end do
     end do
 
@@ -117,15 +112,15 @@ subroutine hhMulLeft(u, k, n, Q, tmp)
     
     tmp = 0
 
-    do i = k, n
-        do j = 1, n
-            tmp(j) = tmp(j) + Q(j, i) * u(i - k + 1) 
+    do j = 1, n  
+        do i = k, n     
+            tmp(j) = tmp(j) + Q(i, j) * u(i - k + 1) 
         end do
-    end do
+    end do   
     
-    do i = k, n
-        do j = 1, n
-            Q(j, i) = Q(j, i) - 2*tmp(j) * u(i - k + 1) 
+    do j = 1, n  
+        do i = k, n   
+            Q(i, j) = Q(i, j) - 2*tmp(j) * u(i - k + 1) 
         end do
     end do
 
@@ -152,7 +147,7 @@ subroutine qr_reflect(R, Q, n)
             vec_i(j - i + 1) = R(j, i)
         end do
 
-        call houshh_alt(vec_i, n - i + 1, h)    
+        call houshh_alt(vec_i, n - i + 1, h)   
         call hhMulLeft(h, i, n, R, tmp)
         call hhMulRight(h, i, n, Q, tmp)
     end do
