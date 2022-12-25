@@ -117,5 +117,7 @@ int main(int argc, char ** argv){
 
     cout << "Time in seconds:" << chrono::duration_cast<chrono::seconds>(end - start).count() << " sec" << "\n";
 
+    delete[] A, R, Q;
+
     return 0;
 }
