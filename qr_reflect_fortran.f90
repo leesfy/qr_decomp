@@ -1,7 +1,7 @@
 PROGRAM main
     implicit none
-
-    double precision, dimension (:), allocatable :: A, R, Q
+ 
+    double precision, dimension (:, :), allocatable :: A, R, Q
     integer :: n, i, j, l
     real ::  start, end
     character(len=32) :: arg
@@ -11,18 +11,18 @@ PROGRAM main
     CALL get_command_argument(1, arg)
     IF (LEN_TRIM(arg) /= 0) read(arg, *) n
 
-    allocate (A(n*n))
+    allocate (A(n, n))
 
     do j = 1, n
         do i = 1, n
-            A((j - 1)*n + i) = i + j
+            A(i, j) = i + j
         end do
     end do
 
 
     call cpu_time(start)
 
-    allocate(R(n*n), Q(n*n))
+    allocate(R(n, n), Q(n, n))
     Q = 0
     R = A
 
@@ -31,7 +31,7 @@ PROGRAM main
     call cpu_time(end)
     write (*,*) "Time in seconds: "
     print *, end - start
-                            
+
     deallocate (A, R, Q)
 
 END PROGRAM main
@@ -86,7 +86,7 @@ subroutine hhMulRight(u, k, n, Q, tmp)
     implicit none
     
     integer, intent(in) :: n, k
-    double precision, intent(inout), dimension(n*n) :: Q
+    double precision, intent(inout), dimension(n, n) :: Q
     double precision, intent(in), dimension(n) :: u
     double precision, intent(out), dimension(n) :: tmp
     integer :: i, j
@@ -96,13 +96,13 @@ subroutine hhMulRight(u, k, n, Q, tmp)
 
     do i = 1, n
         do j = k, n
-            tmp(i) = tmp(i) + Q((i - 1)*n + j) * u(j - k + 1) 
+            tmp(i) = tmp(i) + Q(j, i) * u(j - k + 1) 
         end do
     end do
     
     do i = 1, n
         do j = k, n
-            Q((i - 1)*n + j) = Q((i - 1)*n + j) - 2*tmp(i) * u(j - k + 1) 
+            Q(j, i) = Q(j, i) - 2*tmp(i) * u(j - k + 1) 
         end do
     end do
 
@@ -113,7 +113,7 @@ subroutine hhMulLeft(u, k, n, Q, tmp)
     implicit none
     
     integer, intent(in) :: n, k
-    double precision, intent(inout), dimension(n*n) :: Q
+    double precision, intent(inout), dimension(n, n) :: Q
     double precision, intent(in), dimension(n) :: u
     double precision, intent(out), dimension(n) :: tmp
     integer :: i, j
@@ -123,13 +123,13 @@ subroutine hhMulLeft(u, k, n, Q, tmp)
 
     do i = k, n
         do j = 1, n
-            tmp(j) = tmp(j) + Q((i - 1)*n + j) * u(i - k + 1) 
+            tmp(j) = tmp(j) + Q(j, i) * u(i - k + 1) 
         end do
     end do
     
     do i = k, n
         do j = 1, n
-            Q((i - 1)*n + j) = Q((i - 1)*n + j) - 2*tmp(j) * u(i - k + 1) 
+            Q(j, i) = Q(j, i) - 2*tmp(j) * u(i - k + 1) 
         end do
     end do
 
@@ -141,22 +141,22 @@ subroutine qr_reflect(R, Q, n)
     implicit none
     
     integer, intent(in) :: n
-    double precision, intent(inout), dimension(n*n) :: R, Q
+    double precision, intent(inout), dimension(n, n) :: R, Q
     integer :: i, j
     double precision, dimension (:), allocatable :: vec_i, h, tmp
     
     do i = 1, n
-        Q((i - 1)*n + i) = 1    ! make eye
+        Q(i, i) = 1    ! make eye
     end do
 
-    allocate (vec_i(n), h(n), tmp(n))    
+    allocate (vec_i(n), h(n), tmp(n))  
     
-    do i = 1, n-1
+    do i = 1, n - 1
         do j = i, n
-            vec_i(j - i + 1) = R((j - 1)*n + i)
+            vec_i(j - i + 1) = R(j, i)
         end do
 
-        call houshh_alt(vec_i, n - i + 1, h)
+        call houshh_alt(vec_i, n - i + 1, h)    
         call hhMulLeft(h, i, n, R, tmp)
         call hhMulRight(h, i, n, Q, tmp)
     end do
