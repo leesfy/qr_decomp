@@ -16,7 +16,7 @@ inline void fft(cd *arr, const bool inv, const int n) {
 	}
 
 	for (int i = 1, j = 0; i < n; i++) {
-        int bit = n >> 1;
+		int bit = n >> 1;
         for (; j & bit; bit >>= 1)
             j ^= bit;
         j ^= bit;
@@ -38,9 +38,9 @@ inline void fft(cd *arr, const bool inv, const int n) {
 	    }
 	} else if (n >= 2) {
 		for (int i = 0; i < n; i += 2) {
-	    	cd t = arr[i];
-	    	arr[i] = arr[i] + arr[i + 1];
-	    	arr[i + 1] = t - arr[i + 1];
+			cd t = arr[i];
+			arr[i] = arr[i] + arr[i + 1];
+			arr[i + 1] = t - arr[i + 1];
 	    }
 	}
 
