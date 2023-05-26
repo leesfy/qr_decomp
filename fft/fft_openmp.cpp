@@ -120,15 +120,3 @@ int main(int argc, char ** argv) {
 
 	return 0;
 }
-
-//num_threads(6)
-
-// 7 5 16 8 10 2 4 3
-
-// for (int i = 0; i < n; i += len) {
-// 	for (int j = 0; j < len/2; ++j) {
-// 		cd u = arr[i + j],  v = arr[i + j + max_deg] * wlen_pw[j];
-// 		arr[i + j] = u + v;
-// 		arr[i + j + max_deg] = u - v;
-// 	}
-// }
