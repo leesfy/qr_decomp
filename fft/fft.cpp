@@ -74,7 +74,7 @@ inline void fft(cd *arr, const bool inv, const int n) {
 }
 
 
-int main(int argc, char ** argv) {
+int main(int argc, char **argv) {
 	int n_degr, i;
 	bool inv = true;
 
