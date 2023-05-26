@@ -6,7 +6,6 @@
 using namespace std;
 
 #define _USE_MATH_DEFINES ;
-// const double PI = acos(-1);
 typedef complex<long double> cd;
 
 
