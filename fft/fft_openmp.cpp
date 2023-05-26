@@ -111,11 +111,6 @@ int main(int argc, char ** argv) {
     cout << "Time in milliseconds:" << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms" << "\n";
     cout << "Time in seconds:" << chrono::duration_cast<chrono::seconds>(end - start).count() << " sec" << "\n";
 
-	for (int i = 0; i < 8; ++i) {
-		cout << arr[i] << " ";
-	}
-	cout << "\n";
-
 	delete[] arr;
 
 	return 0;
