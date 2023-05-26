@@ -11,19 +11,19 @@ typedef complex<long double> cd;
 
 
 inline void fft(cd *arr, const bool inv, const int n) {
-	if (n == 1) {
+    if (n == 1) {
 		return;
 	}
 
 	for (int i = 1, j = 0; i < n; i++) {
 		int bit = n >> 1;
-        for (; j & bit; bit >>= 1)
-            j ^= bit;
-        j ^= bit;
+        	for (; j & bit; bit >>= 1)
+            		j ^= bit;
+        	j ^= bit;
 
-        if (i < j)
-            swap(arr[i], arr[j]);
-    }
+        	if (i < j)
+            	swap(arr[i], arr[j]);
+    	}
 
     cd* wlen_pw = new cd[n];
 
@@ -111,14 +111,3 @@ int main(int argc, char ** argv) {
 
 	return 0;
 }
-
-
-// 7 5 16 8 10 2 4 3
-
-// for (int i = 0; i < n; i += len) {
-// 	for (int j = 0; j < len/2; ++j) {
-// 		cd u = arr[i + j],  v = arr[i + j + max_deg] * wlen_pw[j];
-// 		arr[i + j] = u + v;
-// 		arr[i + j + max_deg] = u - v;
-// 	}
-// }
