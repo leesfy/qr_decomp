@@ -79,7 +79,7 @@ int main(int argc, char **argv) {
 	bool inv = true;
 
 	int n = 1000;
-    if (argc > 1) {
+  	if (argc > 1) {
         n = stoi(argv[1]);
     }
 
@@ -96,15 +96,10 @@ int main(int argc, char **argv) {
  
 	fft(arr, inv, n_degr);
 
-    auto end = chrono::steady_clock::now();
+	auto end = chrono::steady_clock::now();
 
-    cout << "Time in milliseconds:" << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms" << "\n";
-    cout << "Time in seconds:" << chrono::duration_cast<chrono::seconds>(end - start).count() << " sec" << "\n";
-
-	for (int i = 0; i < 4; ++i) {
-		cout << arr[i] << " ";
-	}
-	cout << "\n";
+	cout << "Time in milliseconds:" << chrono::duration_cast<chrono::milliseconds>(end - start).count() << " ms" << "\n";
+	cout << "Time in seconds:" << chrono::duration_cast<chrono::seconds>(end - start).count() << " sec" << "\n";
 
 	delete[] arr;
 
