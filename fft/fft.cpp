@@ -56,7 +56,7 @@ inline void fft(cd *arr, const bool inv, const int n) {
 
         for (int i = 0; i < n; i += len) {
             cd t, *pu = arr + i, *pv = arr + i + max_deg;
-            cd *pu_end = arr + i + max_deg,	*pw = wlen_pw;
+            cd *pu_end = arr + i + max_deg, *pw = wlen_pw;
             for (; pu != pu_end; ++pu, ++pv, ++pw) {
                 t = *pv * *pw;
                 *pv = *pu - t;

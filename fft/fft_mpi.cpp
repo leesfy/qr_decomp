@@ -76,8 +76,8 @@ inline void fft(cd *arr, const bool inv, const int n) {
 
         if (pr_id < num_pr) {
             for (int k = 0; k < block_per_process + extra; ++k) {
-                cd t, *pu = arr + offset*len + k*len, *pv = arr + offset*len + k*len + max_deg;
-                cd *pu_end = arr + offset*len + k*len + max_deg,	*pw = wlen_pw;
+                cd t, *pu = arr + offset * len + k * len, *pv = arr + offset * len + k * len + max_deg;
+                cd *pu_end = arr + offset * len + k * len + max_deg, *pw = wlen_pw;
                 for (; pu != pu_end; ++pu, ++pv, ++pw) {
                     t = *pv * *pw;
                     *pv = *pu - t;
