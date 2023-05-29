@@ -14,7 +14,7 @@ inline void fft(cd *arr, const bool inv, const int n) {
         return;
     }
 
-    for (int i = 1, j = 0; i < n; i++) {
+    for (int i = 1, j = 0; i < n; i++) {   // bit-reversal permutation
         int bit = n >> 1;
         for (; j & bit; bit >>= 1)
             j ^= bit;
@@ -26,7 +26,7 @@ inline void fft(cd *arr, const bool inv, const int n) {
 
     cd* wlen_pw = new cd[n];
 
-    if (n >= 4) {
+    if (n >= 4) {                      // manually made fft for len=4
         cd conj (0, (inv ? -1 : 1));
         for (int i = 0; i < n; i += 4) {
 	    cd t1 = arr[i], t2 = arr[i+1], t3 = arr[i+2];
@@ -36,25 +36,25 @@ inline void fft(cd *arr, const bool inv, const int n) {
 	    arr[i + 3] = t1 - t2 + conj*(t3 - arr[i + 3]);
         }
     } else if (n >= 2) {
-        for (int i = 0; i < n; i += 2) {
+        for (int i = 0; i < n; i += 2) {     // manually made fft for len=2
             cd t = arr[i];
             arr[i] = arr[i] + arr[i + 1];
             arr[i + 1] = t - arr[i + 1];
         }
     }
 
-    for (int len = 8; len <= n; len <<= 1) {
+    for (int len = 8; len <= n; len <<= 1) {     // fft for every degree of 2, starting from 8
         int max_deg = len >> 1;
         long double ang = 2 * M_PI / len * (inv ? 1 : -1);
 
         cd wlen (cos(ang), sin(ang));
         wlen_pw[0] = cd (1, 0);
 		
-        for (int i = 1; i < max_deg; ++i) {
+        for (int i = 1; i < max_deg; ++i) {      // pre-calculate all degrees of wlen
             wlen_pw[i] = wlen_pw[i - 1] * wlen;
         }
 
-        for (int i = 0; i < n; i += len) {
+        for (int i = 0; i < n; i += len) {                  // butterfly operation in every block for all blocks
             cd t, *pu = arr + i, *pv = arr + i + max_deg;
             cd *pu_end = arr + i + max_deg, *pw = wlen_pw;
             for (; pu != pu_end; ++pu, ++pv, ++pw) {
@@ -74,21 +74,21 @@ inline void fft(cd *arr, const bool inv, const int n) {
 }
 
 
-int main(int argc, char ** argv) {
+int main(int argc, char **argv) {
     int n_degr, i;
-    bool inv = true;
+    bool inv = true;      // FFT if false, and IFFT if true
 
     int n = 1000;
     if (argc > 1) {
-        n = stoi(argv[1]);
+        n = stoi(argv[1]);     // number of elements of input array
     }
 
     int lg_n = ceil(log2(n));
     n_degr = pow(2, lg_n);
-    cout << "Extension to: " << n_degr << "\n";
+    cout << "Extension to: " << n_degr << "\n";   // nearest degree of 2 to be extended for
 
     cd* arr = new cd[n_degr];
-    for (i = 0; i < n; ++i) {
+    for (i = 0; i < n; ++i) {       // example array
         arr[i] = i;
     }
 
