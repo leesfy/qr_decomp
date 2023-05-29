@@ -66,18 +66,18 @@ inline void fft(cd *arr, const bool inv, const int n) {
             num_pr = n_blocks;
         }
 
-        int source = (pr_id + num_pr - 1) % num_pr;
-        int dest = (pr_id + 1) % num_pr;
+        int dest = (pr_id + num_pr - 1) % num_pr;
+        int source = (pr_id + 1) % num_pr;
 
         int block_per_process = n_blocks / num_pr;
         int rem_blocks = n_blocks % num_pr;
         int extra = ((pr_id < rem_blocks) ? 1 : 0); 
-        int offset = pr_id * block_per_process + min(pr_id, rem_blocks);
+        int offset = pr_id*block_per_process + min(pr_id, rem_blocks);
 
         if (pr_id < num_pr) {
             for (int k = 0; k < block_per_process + extra; ++k) {
-                cd t, *pu = arr + offset * len + k * len, *pv = arr + offset * len + k * len + max_deg;
-                cd *pu_end = arr + offset * len + k * len + max_deg, *pw = wlen_pw;
+                cd t, *pu = arr + offset*len + k*len, *pv = arr + offset*len + k*len + max_deg;
+                cd *pu_end = arr + offset*len + k*len + max_deg,	*pw = wlen_pw;
                 for (; pu != pu_end; ++pu, ++pv, ++pw) {
                     t = *pv * *pw;
                     *pv = *pu - t;
@@ -85,15 +85,15 @@ inline void fft(cd *arr, const bool inv, const int n) {
                 }
             }
 
-            for (int q = 0; q < num_pr; ++q) {
+            for (int q = 0; q < floor(log2(num_pr)); ++q) {
                 MPI_Request reqs[2];
                 MPI_Status stats[2];
-
-                int block_send_id = (pr_id - q + num_pr) % num_pr;
+	        
+                int block_send_id = (pr_id + q + num_pr) % num_pr;
                 int offset_send = block_send_id * block_per_process + min(block_send_id, rem_blocks);
                 int extra_send = ((block_send_id < rem_blocks) ? 1 : 0);
 
-                int block_recv_id = (block_send_id - 1 + num_pr) % num_pr; 
+                int block_recv_id = (block_send_id + 1 + num_pr) % num_pr; 
                 int offset_recv = block_recv_id * block_per_process + min(block_recv_id, rem_blocks);
                 int extra_recv = ((block_recv_id < rem_blocks) ? 1 : 0);
 
@@ -102,6 +102,7 @@ inline void fft(cd *arr, const bool inv, const int n) {
                 
                 MPI_Waitall(2, reqs, stats);
             }
+
         }
     }
 
@@ -131,7 +132,7 @@ int main(int argc, char ** argv) {
     int lg_n = ceil(log2(n));
     n_degr = pow(2, lg_n);
     if (pr_id == 0) {
-        cout << "Extension to: " << n_degr << "\n";
+        cout << n_degr << "\n";
     }
 
     cd* arr = new cd[n_degr];
@@ -140,7 +141,7 @@ int main(int argc, char ** argv) {
     }
 
     auto start = chrono::steady_clock::now();
-
+ 
     fft(arr, inv, n_degr);
 
     auto end = chrono::steady_clock::now();
